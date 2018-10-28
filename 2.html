@@ -1,0 +1,92 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    .triangle-right {
+        width: 0;
+        height: 0;
+        border-right: 50px solid green;
+        border-bottom: 100px solid transparent;
+        position: absolute;
+        top:0;
+        right: 0;
+        z-index:2;
+    }
+    .rectangle{
+        width: 60;
+        height: 150;
+        position: absolute;
+        top:300px;
+        right: 50%;
+        background-color: blue;
+    }
+    .ball {
+        height: 25px;
+        width: 25px;
+        background-color: #555;
+        border-radius: 50%;
+        position:absolute;
+        top: 0;
+        right: 0;
+        z-index: 1;
+    }
+    .title{
+        position: absolute;
+        bottom:5px;
+        left: 5px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    </style>
+</head>
+<body>
+    <div class="triangle-right" id="triangle"></div>
+    <div class="rectangle" id="rectangle"></div>
+    <div class="ball" id="ball"></div>
+    <div class="title">Гозак Ярослав</div>
+
+    <script type="text/javascript">
+        var phi = Math.PI - Math.PI/6;
+        var speed = 5;
+        var rectangle = document.querySelector('#rectangle');
+        var triangle = document.querySelector('#triangle');
+        var ball = document.querySelector('#ball');
+        var body = document.querySelector('body');
+        var width = ball.offsetWidth;
+        var height = ball.offsetHeight;
+
+        var rectangleRight = rectangle.getBoundingClientRect().right;
+
+        var bodyWidth = body.clientWidth - 20;
+        var bodyHeight = body.clientHeight;
+        var goingDown = true, goingRight = false;
+
+        ball.style.top = '0px';
+        ball.style.left = bodyWidth - ball.style.width + 'px';
+
+        function moveByLine(){
+            var bound = ball.getBoundingClientRect(); 
+            var ballLeft = parseInt(bound.left);
+            var ballTop = parseInt(bound.top);
+            var LNext, TNext;
+            var leftOffset = speed * Math.cos(phi);
+            var topOffset = speed * Math.sin(phi);
+            LNext = ballLeft + leftOffset;
+            TNext = ballTop + topOffset;
+
+            if((LNext < rectangleRight)){
+                phi = Math.PI - phi;
+            }
+            if(LNext > bodyWidth || TNext > bodyHeight){
+                ballLeft = bodyWidth;
+                ballTop = 0;
+                phi = Math.PI - Math.PI/6;
+            }
+            LNext = ballLeft + speed * Math.cos(phi);
+            TNext = ballTop + speed * Math.sin(phi);
+            ball.style.left = LNext + 'px';
+            ball.style.top = TNext + 'px';
+        }
+
+        var moveInterval = setInterval(moveByLine, 20);
+    </script>
+</body>

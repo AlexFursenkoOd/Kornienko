@@ -1,0 +1,48 @@
+<body>
+    <span id="move-me" style="position:absolute; border:1px solid black;">Moving</span>
+    <script type="text/javascript">
+        var phi = Math.PI/6;
+        var rho = 10;
+        var rectangle = document.querySelector('#move-me');
+        var body = document.querySelector('body');
+        var rectangleWidth = rectangle.offsetWidth;
+        var rectangleHeight = rectangle.offsetHeight;
+        var bodyWidth = body.clientWidth - 20;
+        var bodyHeight = body.clientHeight;
+        var goingDown = true, goingRight = true;
+
+        function moveByLine(){
+            var bound = rectangle.getBoundingClientRect(); 
+            var leftX = parseInt(bound.left);
+            var topY = parseInt(bound.top);
+            var LNext, TNext;
+            var Wb, Hb;
+            var leftOffset = rho * Math.cos(phi);
+            var topOffset = rho * Math.sin(phi);
+            LNext = leftX + leftOffset;
+            TNext = topY + topOffset;
+
+            if((LNext < 0 && !goingRight)|| (LNext + rectangleWidth > bodyWidth && goingRight)){
+                phi = Math.PI - phi;
+                goingRight = !goingRight;
+            }
+            if((TNext < 0 && !goingDown)|| (TNext + rectangleHeight > bodyHeight && goingDown)){
+                phi = -phi;
+                goingDown = !goingDown;
+            }
+
+            if(LNext < 0 || TNext + rectangleHeight > bodyHeight){
+                rho = rho / 2;
+            }
+            if(rectangleWidth + LNext > bodyWidth || TNext < 0){
+                rho = rho * 2;
+            }
+            leftX += rho * Math.cos(phi);
+            topY += rho * Math.sin(phi);
+            rectangle.style.left = leftX + 'px';
+            rectangle.style.top = topY + 'px';
+        }
+
+        var moveInterval = setInterval(moveByLine, 20);
+    </script>
+</body>
